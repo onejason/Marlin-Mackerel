@@ -55,6 +55,7 @@ static void lcd_prepare_menu();
 static void lcd_move_menu();
 static void lcd_control_menu();
 static void lcd_control_temperature_menu();
+static void lcd_manual_control_menu();
 static void lcd_control_Filament_PID_menu();
 static void lcd_control_temperature_preheat_pla_settings_menu();
 static void lcd_control_temperature_preheat_abs_settings_menu();
@@ -323,6 +324,51 @@ static void lcd_extruder_resume()
     lcd_enable_statistics();
 }
 
+static void lcd_manual_control_fan_on()
+{
+    digitalWrite(CONTROLLERFAN_PIN, 1); //start fan
+
+}
+
+static void lcd_manual_control_fan_off()
+{
+    digitalWrite(CONTROLLERFAN_PIN, 0); //stop fan
+
+}
+
+static void lcd_manual_control_winder_on()
+{
+	winderSpeed = default_winder_speed*255/winder_rpm_factor;  //start winder
+}
+
+static void lcd_manual_control_winder_off()
+{
+    winderSpeed = 0;                    //stop winder
+}
+
+static void lcd_manual_control_extrude_on()
+{
+	extrude_status=extrude_status|ES_ENABLE_SET;
+    puller_feedrate = puller_feedrate_default;   //use default feed rate
+
+}
+
+static void lcd_manual_control_extrude_off()
+{
+    extrude_status=extrude_status & ES_ENABLE_CLEAR;
+}
+
+// static void lcd_manual_control_puller_on()
+// {
+// 	puller_feedrate = puller_feedrate_default;   //use default feed rate
+// }
+
+// static void lcd_manual_control_puller_off()
+// {
+//     puller_feedrate_default = puller_feedrate;   //save default feed rate
+
+// }
+
 static void lcd_extruder_automatic()
 	{
 	if(extrude_status& ES_HOT_SET>0)  //ensure extruder is hot before setting to automatic
@@ -377,6 +423,7 @@ static void lcd_main_menu()
 {
     START_MENU();
     MENU_ITEM(back, MSG_WATCH, lcd_status_screen);
+    MENU_ITEM(submenu, MSG_MANUAL_CONTROL, lcd_manual_control_menu);
     
     if ((extrude_status & ES_ENABLE_SET) >0)
        	{
@@ -936,9 +983,9 @@ static void lcd_move_menu_01mm()
 static void lcd_move_menu()
 {
     START_MENU();
-    MENU_ITEM(back, MSG_PREPARE, lcd_prepare_menu);
-    MENU_ITEM(submenu, MSG_MOVE_10MM, lcd_move_menu_10mm);
-    MENU_ITEM(submenu, MSG_MOVE_1MM, lcd_move_menu_1mm);
+    MENU_ITEM(back,MSG_MANUAL_CONTROL, lcd_manual_control_menu);
+    // MENU_ITEM(submenu, MSG_MOVE_10MM, lcd_move_menu_10mm);
+    // MENU_ITEM(submenu, MSG_MOVE_1MM, lcd_move_menu_1mm);
     MENU_ITEM(submenu, MSG_MOVE_01MM, lcd_move_menu_01mm);
     //TODO:X,Y,Z,E
     END_MENU();
@@ -965,6 +1012,23 @@ static void lcd_control_menu()
     MENU_ITEM(function, MSG_LOAD_EPROM, Config_RetrieveSettings);
 #endif
     MENU_ITEM(function, MSG_RESTORE_FAILSAFE, Config_ResetDefault);
+    END_MENU();
+}
+
+static void lcd_manual_control_menu()
+{
+    START_MENU();
+    MENU_ITEM(back, MSG_MAIN, lcd_main_menu);
+    MENU_ITEM(function, MSG_MANUAL_CONTROL_FAN_ON, lcd_manual_control_fan_on);
+    MENU_ITEM(function, MSG_MANUAL_CONTROL_FAN_OFF, lcd_manual_control_fan_off);
+    MENU_ITEM(function, MSG_MANUAL_CONTROL_WINDER_ON, lcd_manual_control_winder_on);
+    MENU_ITEM(function, MSG_MANUAL_CONTROL_WINDER_OFF, lcd_manual_control_winder_off);
+    
+    // Jason: Extruder and puller are combined together in loop to caulculate E_AXIS and P_AXIS destination  
+    MENU_ITEM(function, MSG_MANUAL_CONTROL_EXTRUDE_ON, lcd_manual_control_extrude_on);
+    MENU_ITEM(function, MSG_MANUAL_CONTROL_EXTRUDE_OFF, lcd_manual_control_extrude_off); 
+    MENU_ITEM(submenu, MSG_MOVE_AXIS, lcd_move_menu);
+
     END_MENU();
 }
 

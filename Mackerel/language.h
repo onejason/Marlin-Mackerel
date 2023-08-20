@@ -61,9 +61,9 @@
 // Common serial messages
 #define MSG_MARLIN "Mackerel"
 
-#define SPLASH1 "    Lyman/Mulier"
-#define SPLASH2 " Filament Extruder"
-#define SPLASH3 "        V5.0"
+#define SPLASH1 "PS/Jason"
+#define SPLASH2 "Filament Extruder"
+#define SPLASH3 "V0.1"
 
 
 #if LANGUAGE_CHOICE == 1
@@ -123,6 +123,7 @@
 	#define MSG_FLOW1 "Flow 1"
 	#define MSG_FLOW2 "Flow 2"
 	#define MSG_CONTROL "Control"
+	#define MSG_MANUAL_CONTROL "manual control"
 	#define MSG_MIN " \002 Min"
 	#define MSG_MAX " \002 Max"
 	#define MSG_FACTOR " \002 Fact"
@@ -168,6 +169,14 @@
 	#define MSG_PAUSE_PRINT "Pause print"
 	#define MSG_RESUME_PRINT "Resume print"
     #define MSG_PAUSE_EXTRUDER "Pause extruder"
+	#define MSG_MANUAL_CONTROL_FAN_ON "fan ON"
+	#define MSG_MANUAL_CONTROL_FAN_OFF "fan OFF"
+	#define MSG_MANUAL_CONTROL_WINDER_ON "winder ON"
+	#define MSG_MANUAL_CONTROL_WINDER_OFF "winder OFF"
+	#define MSG_MANUAL_CONTROL_EXTRUDE_ON "extruder ON"
+	#define MSG_MANUAL_CONTROL_EXTRUDE_OFF "extruder OFF"
+	#define MSG_MANUAL_CONTROL_PULLER_ON "puller ON"
+	#define MSG_MANUAL_CONTROL_PULLER_OFF "puller OFF"
 	#define MSG_RESUME_EXTRUDER "Resume extruder"
     #define MSG_AUTO_EXTRUDER "Extruder Auto Contrl"
     #define MSG_MAN_EXTRUDER "Extruder Man Control"
