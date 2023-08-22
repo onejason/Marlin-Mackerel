@@ -194,6 +194,8 @@ CardReader card;
 float homing_feedrate[] = HOMING_FEEDRATE;
 bool axis_relative_modes[] = AXIS_RELATIVE_MODES;
 unsigned char extrude_status =0;
+bool debug_stepper = false;
+bool debug_winder = false;
 float filament_width_desired= DESIRED_FILAMENT_DIA; //holds the desired filament width (i.e like 2.6mm)
 int feedmultiply; //100->1 200->2
 int saved_feedmultiply;
@@ -655,7 +657,11 @@ void loop()
 
   if(extrude_length < fil_length_cutoff)
 	  winderSpeed = default_winder_speed*255/winder_rpm_factor;  //keep winder on all the time unless at end of spool
-  
+  // in debug mode, ignore fil_length_cutoff
+  if(!debug_winder) {
+    if(extrude_length < fil_length_cutoff)
+      winderSpeed = default_winder_speed*255/winder_rpm_factor;  //keep winder on all the time unless at end of spool
+  }
 
   
   
@@ -717,7 +723,12 @@ void loop()
 	  LCD_MESSAGEPGM(MSG_HEATING_COMPLETE);
   	  }
   	
-  
+  // in debug mode, ignore EXTRUDE_MINTEMP checking
+  // directly set ES_HOT_SET and ES_TEMP_SET
+  if(debug_stepper){
+    extrude_status=extrude_status | ES_HOT_SET;
+    extrude_status=extrude_status | ES_TEMP_SET;
+  }
   
   if((extrude_status & ES_ENABLE_SET) >0){
 	  

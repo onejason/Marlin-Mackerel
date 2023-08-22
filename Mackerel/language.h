@@ -63,7 +63,7 @@
 
 #define SPLASH1 "PS/Jason"
 #define SPLASH2 "Filament Extruder"
-#define SPLASH3 "V0.1"
+#define SPLASH3 "V0.2"
 
 
 #if LANGUAGE_CHOICE == 1

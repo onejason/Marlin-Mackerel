@@ -338,17 +338,20 @@ static void lcd_manual_control_fan_off()
 
 static void lcd_manual_control_winder_on()
 {
+    debug_winder = true;
 	winderSpeed = default_winder_speed*255/winder_rpm_factor;  //start winder
 }
 
 static void lcd_manual_control_winder_off()
 {
+    debug_winder = true;
     winderSpeed = 0;                    //stop winder
 }
 
 static void lcd_manual_control_extrude_on()
 {
-	extrude_status=extrude_status|ES_ENABLE_SET;
+    debug_stepper = true;
+    extrude_status=extrude_status|ES_ENABLE_SET;
     puller_feedrate = puller_feedrate_default;   //use default feed rate
 
 }
@@ -356,6 +359,8 @@ static void lcd_manual_control_extrude_on()
 static void lcd_manual_control_extrude_off()
 {
     extrude_status=extrude_status & ES_ENABLE_CLEAR;
+    debug_stepper = false;
+
 }
 
 // static void lcd_manual_control_puller_on()
@@ -424,6 +429,8 @@ static void lcd_main_menu()
     START_MENU();
     MENU_ITEM(back, MSG_WATCH, lcd_status_screen);
     MENU_ITEM(submenu, MSG_MANUAL_CONTROL, lcd_manual_control_menu);
+    debug_stepper = false;
+    debug_winder = false;
     
     if ((extrude_status & ES_ENABLE_SET) >0)
        	{
@@ -883,6 +890,7 @@ static void lcd_move_z()
 }
 static void lcd_move_e()
 {
+    debug_stepper = true;
     if (encoderPosition != 0)
     {
         
@@ -917,6 +925,7 @@ static void lcd_move_e()
         lcd_quick_feedback();
         currentMenu = lcd_move_menu_axis;
         encoderPosition = 0;
+        debug_stepper = false;
     }
 }
 
